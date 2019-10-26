@@ -1,26 +1,64 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import * as posenet from "@tensorflow-models/posenet";
+import Webcam from "react-webcam";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+let net = null;
+
+async function estimatePoseOnImage(imageElement) {
+    // load the posenet model from a checkpoint
+    // const net = await posenet.load();
+
+    const pose = await net.estimateSinglePose(imageElement, {
+        flipHorizontal: false
+    });
+    return pose;
 }
 
-export default App;
+
+export default class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.webcamRef = React.createRef();
+        this.state = {
+            "image": null
+        }
+    }
+    formatImage() {
+        return "data:image/png;base64," + this.state.image;
+    }
+    async componentDidMount() {
+        net = await posenet.load();
+    }
+    getScreenshot() {
+        // const capture = React.useCallback(
+        //     () => {
+        //       const imageSrc = this.webcamRef.current.getScreenshot();
+        //     },
+        //     [this.webcamRef]
+        //   );
+        const sshot = this.webcamRef.current.getScreenshot();
+        const img = document.createElement("img");
+        img.src = sshot;
+        setTimeout(async function test() {
+            // const img = document.getElementById("img");
+            const pose = await estimatePoseOnImage(img);
+            console.log(pose);
+        })
+    }
+    render() {
+        return (
+            <div className="App">
+                <button onClick={() => this.getScreenshot()}>Click Me!</button>
+                <Webcam
+                    audio={false}
+                    height={480}
+                    ref={this.webcamRef}
+                    screenshotFormat="image/jpeg"
+                    width={960}
+                />
+            </div>
+        );
+    }
+}
+
