@@ -8,26 +8,39 @@ export default class Dashboard extends Component {
     this.state = {
       videoPermission: false,
       notificationPermission: false,
+      notificationIds: [],
     }
+    this.handleNotification = this.handleNotification.bind(this);
   }
 
   componentDidMount() {
-    chrome.permissions.contains({
-      permissions: ['notifications', 'videoCapture'],
-    }, function(result) {
-      if (result) {
-        // The extension has the permissions.
-        console.log(result);
-      } else {
-        // The extension doesn't have the permissions.
-        console.log('oops');
-      }
-    });
+  }
+
+  handleNotification() {
+    let _this = this;
+    let options = {
+      type: "basic",
+      iconUrl: "./logo192.png",
+      title: "PostureML",
+      message: "Uh-Oh! Fix your posture!",
+      priority: 2,
+      buttons: [
+        { title: "Reset posture" }
+      ]
+    }
+
+    chrome.notifications.create(options, function(notificationId) {
+      _this.setState(state => {
+        return {
+          notificationIds: [...state.notificationIds, notificationId]
+        }
+      });
+    })
   }
 
   render() {
     return(
-      <button>Click me!</button>
+      <button onClick={this.handleNotification}>Test push notifications</button>
     )
   }
 }
