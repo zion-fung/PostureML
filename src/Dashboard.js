@@ -1,6 +1,8 @@
 /*global chrome*/
 
 import React, { Component } from 'react';
+import firebase from "./firebase/config";
+import 'firebase/database';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -14,6 +16,7 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
+    console.log(firebase);
   }
 
   handleNotification() {
