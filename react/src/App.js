@@ -24,10 +24,15 @@ export default class App extends Component {
             displayName: "John Smith",
             loadingUI: true,
             resetText: "Reset Posture",
-            disableReset: false
+            disableReset: false,
+            labels: ["7:40"],
+            data: [15]
         }
     }
-    componentDidMount() {
+    componentWillMount() {
+
+    // }
+    // componentDidMount() {
         let that = this;
         this.resetPose();
         firebase.auth().onAuthStateChanged(function (user) {
@@ -41,8 +46,32 @@ export default class App extends Component {
             }
         });
         interval = setInterval(() => {
-            let data = localStorage.getItem("data")
-            // Write to firebase
+            let data = localStorage.getItem("scores");
+            if(data) {
+                let labels = this.state.labels;
+                let graphData = this.state.data;
+                for (let [key, value] of Object.entries(data)) {
+                    let k = key.split('/');
+                    labels.push(`${k[3]} ${k[4]}`);
+                    graphData.push(value);
+                }
+                this.setState({ labels: labels, data: graphData });
+            }
+            // if (data) {
+            //     for (let [key, value] of Object.entries(data)) {
+
+            //         let k = key.split('/');
+
+            //         let ref = firebase.database().ref(`data/year/${k[0]}/month/${k[1]}`);
+
+            //         var postsRef = ref.child(`scores`);
+
+            //         postsRef.push().set({
+
+            //             [`${k[3]}:${k[4]}`]: value
+            //         });
+            //     }
+            // }
         }, 10000)
         setTimeout(() => {
             console.log("done loading");
@@ -124,9 +153,6 @@ export default class App extends Component {
                         style={{ margin: 20 }}
                     >{this.state.loggedIn ? "Logout" : "Login"}</Button>
                     <div className="parent">
-                        {/* <Menu className="menu">
-                    <Menu.Item onClick=>Login</Menu.Item>
-                </Menu> */}
                         <Grid columns={2}>
                             <Grid.Column width={4} className="profile">
                                 <Card>
@@ -143,7 +169,7 @@ export default class App extends Component {
                                             onClick={() => { this.resetPose() }}
                                             color="grey"
                                             disabled={this.state.disableReset}
-                                            >{this.state.resetText}</Button>
+                                        >{this.state.resetText}</Button>
                                     </Card.Content>
                                 </Card>
                             </Grid.Column>
@@ -151,7 +177,7 @@ export default class App extends Component {
                             <Grid.Column width={11} className="content" stretched>
                                 <Grid.Row className="graph">
                                     <Segment>
-                                        <LineGraph />
+                                        <LineGraph labels={this.state.labels} data={this.state.data} />
                                     </Segment>
                                 </Grid.Row>
                                 <Grid.Row>
