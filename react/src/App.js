@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Grid, Card, Image, Button, Segment } from 'semantic-ui-react';
 import "./App.css";
+import LineGraph from "./LineGraph";
 
 export default class App extends Component {
     constructor(props) {
@@ -30,7 +31,7 @@ export default class App extends Component {
     render() {
         return (
             <div className="parent">
-                <Grid columns={2} divided>
+                <Grid columns={2}>
                     <Grid.Column width={4} className="profile">
                         <Card>
                             <Card.Header>Profile</Card.Header>
@@ -50,9 +51,9 @@ export default class App extends Component {
                     </Grid.Column>
                     <Grid.Column width={1}></Grid.Column>
                     <Grid.Column width={11} className="content" stretched>
-                        <Grid.Row>
+                        <Grid.Row className="graph">
                             <Segment>
-                                Graph here
+                                <LineGraph />
                             </Segment>
                         </Grid.Row>
                         <Grid.Row>
