@@ -1,0 +1,23 @@
+.parent {
+    margin: 150px;
+}
+
+.profile {
+    /* background-color: blue; */
+    padding: 25px;
+}
+
+.profile .card {
+    padding: 25px;
+}
+
+.profile .card * {
+    margin-bottom: 5px;
+}
+
+.content {
+}
+
+.shareOptions {
+    padding: 0px 20px;
+}
