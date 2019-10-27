@@ -38844,9 +38844,10 @@ function calculateScore() {
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error('Browser API navigator.mediaDevices.getUserMedia not available');
-  }
+  } // const video = document.getElementById('video');
 
-  const video = document.getElementById('video');
+
+  const video = document.createElement("video");
   video.width = videoWidth;
   video.height = videoHeight;
   const mobile = (0, _demo_util.isMobile)();
@@ -39147,97 +39148,18 @@ function calculateHeadSize(headWidth, screenWidth) {
 
 
 function detectPoseInRealTime(video, net) {
-  const canvas = document.getElementById('output');
-  const ctx = canvas.getContext('2d'); // since images are being fed from a webcam, we want to feed in the
+  // const canvas = document.getElementById('output');
+  // const ctx = canvas.getContext('2d');
+  // since images are being fed from a webcam, we want to feed in the
   // original image and then just flip the keypoints' x coordinates. If instead
   // we flip the image, then correcting left-right keypoint pairs requires a
   // permutation on all the keypoints.
-
-  const flipPoseHorizontal = true;
-  canvas.width = videoWidth;
-  canvas.height = videoHeight;
+  const flipPoseHorizontal = true; // canvas.width = videoWidth;
+  // canvas.height = videoHeight;
 
   async function poseDetectionFrame() {
     // console.log("poseDetectionFrame");
-    if (guiState.changeToArchitecture) {
-      // Important to purge variables and free up GPU memory
-      guiState.net.dispose();
-      (0, _demo_util.toggleLoadingUI)(true);
-      guiState.net = await posenet.load({
-        architecture: guiState.changeToArchitecture,
-        outputStride: guiState.outputStride,
-        inputResolution: guiState.inputResolution,
-        multiplier: guiState.multiplier
-      });
-      (0, _demo_util.toggleLoadingUI)(false);
-      guiState.architecture = guiState.changeToArchitecture;
-      guiState.changeToArchitecture = null;
-    }
-
-    if (guiState.changeToMultiplier) {
-      guiState.net.dispose();
-      (0, _demo_util.toggleLoadingUI)(true);
-      guiState.net = await posenet.load({
-        architecture: guiState.architecture,
-        outputStride: guiState.outputStride,
-        inputResolution: guiState.inputResolution,
-        multiplier: +guiState.changeToMultiplier,
-        quantBytes: guiState.quantBytes
-      });
-      (0, _demo_util.toggleLoadingUI)(false);
-      guiState.multiplier = +guiState.changeToMultiplier;
-      guiState.changeToMultiplier = null;
-    }
-
-    if (guiState.changeToOutputStride) {
-      // Important to purge variables and free up GPU memory
-      guiState.net.dispose();
-      (0, _demo_util.toggleLoadingUI)(true);
-      guiState.net = await posenet.load({
-        architecture: guiState.architecture,
-        outputStride: +guiState.changeToOutputStride,
-        inputResolution: guiState.inputResolution,
-        multiplier: guiState.multiplier,
-        quantBytes: guiState.quantBytes
-      });
-      (0, _demo_util.toggleLoadingUI)(false);
-      guiState.outputStride = +guiState.changeToOutputStride;
-      guiState.changeToOutputStride = null;
-    }
-
-    if (guiState.changeToInputResolution) {
-      // Important to purge variables and free up GPU memory
-      guiState.net.dispose();
-      (0, _demo_util.toggleLoadingUI)(true);
-      guiState.net = await posenet.load({
-        architecture: guiState.architecture,
-        outputStride: guiState.outputStride,
-        inputResolution: +guiState.changeToInputResolution,
-        multiplier: guiState.multiplier,
-        quantBytes: guiState.quantBytes
-      });
-      (0, _demo_util.toggleLoadingUI)(false);
-      guiState.inputResolution = +guiState.changeToInputResolution;
-      guiState.changeToInputResolution = null;
-    }
-
-    if (guiState.changeToQuantBytes) {
-      // Important to purge variables and free up GPU memory
-      guiState.net.dispose();
-      (0, _demo_util.toggleLoadingUI)(true);
-      guiState.net = await posenet.load({
-        architecture: guiState.architecture,
-        outputStride: guiState.outputStride,
-        inputResolution: guiState.inputResolution,
-        multiplier: guiState.multiplier,
-        quantBytes: guiState.changeToQuantBytes
-      });
-      (0, _demo_util.toggleLoadingUI)(false);
-      guiState.quantBytes = guiState.changeToQuantBytes;
-      guiState.changeToQuantBytes = null;
-    } // Begin monitoring code for frames per second
-
-
+    // Begin monitoring code for frames per second
     stats.begin();
     let poses = [];
     let minPoseConfidence;
@@ -39272,7 +39194,7 @@ function detectPoseInRealTime(video, net) {
     if (poses.length == 1) {
       let facePoints = poses[0].keypoints.slice(0, 5);
       let headWidth = calculateHeadWidth(facePoints);
-      let foundHeadSize = calculateHeadSize(headWidth, canvas.width);
+      let foundHeadSize = calculateHeadSize(headWidth, videoWidth);
       headSize = foundHeadSize;
 
       if (foundHeadSize > headSizeThreshold) {
@@ -39312,43 +39234,40 @@ function detectPoseInRealTime(video, net) {
       // };
       // console.log(data.picture.substring(0, 130));
       // fetch("http://localhost:5000/frame", { method: "POST", body: JSON.stringify(data) });
-    }
-
-    ctx.clearRect(0, 0, videoWidth, videoHeight);
-
-    if (guiState.output.showVideo) {
-      ctx.save();
-      ctx.scale(-1, 1);
-      ctx.translate(-videoWidth, 0);
-      ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
-      ctx.restore();
-    } // For each pose (i.e. person) detected in an image, loop through the poses
+    } // ctx.clearRect(0, 0, videoWidth, videoHeight);
+    // if (guiState.output.showVideo) {
+    //   ctx.save();
+    //   ctx.scale(-1, 1);
+    //   ctx.translate(-videoWidth, 0);
+    //   ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+    //   ctx.restore();
+    // }
+    // For each pose (i.e. person) detected in an image, loop through the poses
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
+    // poses.forEach(({ score, keypoints }) => {
+    //   if (score >= minPoseConfidence) {
+    //     if (guiState.output.showPoints) {
+    //       drawKeypoints(keypoints, minPartConfidence, ctx);
+    //     }
+    //     if (guiState.output.showSkeleton) {
+    //       drawSkeleton(keypoints, minPartConfidence, ctx);
+    //     }
+    //     if (guiState.output.showBoundingBox) {
+    //       drawBoundingBox(keypoints, ctx);
+    //     }
+    //   }
+    // });
+    // End monitoring code for frames per second
 
-
-    poses.forEach(({
-      score,
-      keypoints
-    }) => {
-      if (score >= minPoseConfidence) {
-        if (guiState.output.showPoints) {
-          (0, _demo_util.drawKeypoints)(keypoints, minPartConfidence, ctx);
-        }
-
-        if (guiState.output.showSkeleton) {
-          (0, _demo_util.drawSkeleton)(keypoints, minPartConfidence, ctx);
-        }
-
-        if (guiState.output.showBoundingBox) {
-          (0, _demo_util.drawBoundingBox)(keypoints, ctx);
-        }
-      }
-    }); // End monitoring code for frames per second
 
     stats.end(); // setTimeout(() => {
+    // requestAnimationFrame(poseDetectionFrame);
+    // }, 250);
 
-    requestAnimationFrame(poseDetectionFrame); // }, 250);
+    setTimeout(() => {
+      poseDetectionFrame();
+    }, 100);
   }
 
   poseDetectionFrame();
@@ -39360,15 +39279,15 @@ function detectPoseInRealTime(video, net) {
 
 
 async function bindPage() {
-  (0, _demo_util.toggleLoadingUI)(true);
+  // toggleLoadingUI(true);
   const net = await posenet.load({
     architecture: guiState.input.architecture,
     outputStride: guiState.input.outputStride,
     inputResolution: guiState.input.inputResolution,
     multiplier: guiState.input.multiplier,
     quantBytes: guiState.input.quantBytes
-  });
-  (0, _demo_util.toggleLoadingUI)(false);
+  }); // toggleLoadingUI(false);
+
   let video;
 
   try {
@@ -39387,11 +39306,14 @@ async function bindPage() {
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia; // kick off the demo
 
-bindPage();
 window.addEventListener("load", function () {
-  document.getElementById("defaultButton").addEventListener("click", function () {
-    setDefaultPose();
-  });
+  bindPage(); //   document.getElementById("defaultButton").addEventListener("click", function () {
+  //     setDefaultPose();
+  //   });
+});
+let resetEvent = new Event("setDefaultPose");
+window.addEventListener(resetEvent, function () {
+  setDefaultPose();
 });
 },{"@tensorflow-models/posenet":"node_modules/@tensorflow-models/posenet/dist/index.js","dat.gui":"node_modules/dat.gui/build/dat.gui.module.js","stats.js":"node_modules/stats.js/build/stats.min.js","./demo_util":"demo_util.js"}]},{},["camera.js"], null)
 //# sourceMappingURL=/camera.283d5d54.js.map

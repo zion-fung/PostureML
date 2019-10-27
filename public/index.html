@@ -30,35 +30,21 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+          This HTML file is a template.
+          If you open it directly in the browser, you will see an empty page.
+          You can add webfonts, meta tags, or analytics to this file.
+          The build step will place the bundled scripts into the <body> tag.
+          To begin the development, run `npm start` or `yarn start`.
+          To create a production bundle, use `npm run build` or `yarn build`.
+        -->
+    <!-- <button id="defaultButton">Reset pose</button> -->
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-    <div id="info" style="display:none">
-    </div>
-    <div id="loading" style="display:flex">
-        <div class="spinner-text">
-            Loading PoseNet model...
-        </div>
-        <div class="sk-spinner sk-spinner-pulse"></div>
-    </div>
-    <div id="main" style="display:none">
-        <video id="video" playsinline="" style=" -moz-transform: scaleX(-1);
-        -o-transform: scaleX(-1);
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-        display: none;
-        ">
-        </video>
-        <canvas id="output">
-        </canvas></div>
-    <button id="defaultButton">Reset pose</button>
-
+    <!-- <script>
+        let resetEvent = new Event("setDefaultPose");
+        document.getElementById("defaultButton").addEventListener("click", function() {
+            window.dispatchEvent(resetEvent);
+        })
+    </script> -->
     <script src="/camera.283d5d54.js"></script>
 </body>
 

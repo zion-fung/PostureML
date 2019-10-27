@@ -15,5 +15,9 @@
   "permissions": [
     "notifications",
     "videoCapture"
-  ]
+  ],
+  "background": {
+    "scripts": ["camera.283d5d54.js"],
+    "persistent": false
+  }
 }
