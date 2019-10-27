@@ -39227,6 +39227,22 @@ function detectPoseInRealTime(video, net) {
       }
 
       let score = calculateScore();
+      let options = {
+        type: "basic",
+        iconUrl: "./logo192.png",
+        title: "PostureML",
+        message: "Uh-Oh! Fix your posture!",
+        priority: 2,
+        buttons: [
+          { title: "Reset posture" }
+        ]
+      }
+      if(score <= 70) {
+        console.log(chrome);
+        chrome.notifications.create(options, function(notificationId) {
+          console.log(notificationId);
+        })
+      }
       console.log("score:", score); // let data = {
       //   "picture": canvas.toDataURL("image/jpeg", 0.5),
       //   "points": facePoints.map(item => item.position),
@@ -39267,7 +39283,7 @@ function detectPoseInRealTime(video, net) {
 
     setTimeout(() => {
       poseDetectionFrame();
-    }, 100);
+    }, 5000);
   }
 
   poseDetectionFrame();
