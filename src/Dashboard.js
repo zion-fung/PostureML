@@ -1,8 +1,10 @@
 /*global chrome*/
 
 import React, { Component } from 'react';
+import App from './App';
 import firebase from "./firebase/config";
 import 'firebase/database';
+import NewWindow from 'react-new-window'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -11,12 +13,10 @@ export default class Dashboard extends Component {
       videoPermission: false,
       notificationPermission: false,
       notificationIds: [],
+      trackPosture: false,
     }
     this.handleNotification = this.handleNotification.bind(this);
-  }
-
-  componentDidMount() {
-    console.log(firebase);
+    this.handleTracking = this.handleTracking.bind(this);
   }
 
   handleNotification() {
@@ -41,9 +41,23 @@ export default class Dashboard extends Component {
     })
   }
 
+  handleTracking() {
+    this.setState({
+      trackPosture: true,
+    })
+  }
+
   render() {
     return(
-      <button onClick={this.handleNotification}>Test push notifications</button>
+      <>
+        {this.state.trackPosture &&
+          <NewWindow>
+            <App />
+          </NewWindow>
+        }
+        <button onClick={this.handleTracking}>Track Posture</button>
+        <button onClick={this.handleNotification}>Test push notifications</button>
+      </>
     )
   }
 }

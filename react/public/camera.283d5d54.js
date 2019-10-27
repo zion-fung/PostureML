@@ -38799,6 +38799,14 @@ let yScoreMultiplier = .7;
 let zScoreMultiplier = 400;
 let timeout = null;
 let video = null;
+let notifEvent = new Event("pushNotification");
+let notificationOptions = {
+  type: "basic",
+  iconUrl: "./logo192.png",
+  title: "PostureML",
+  message: "Uh-Oh! Fix your posture!",
+  priority: 2
+};
 
 function setDefaultPose() {
   lookingDownThreshold = lookingStraight - lookingStraightTolerance;
@@ -39229,18 +39237,17 @@ function detectPoseInRealTime(video, net) {
       }
 
       let score = calculateScore();
-      console.log("score:", score); // let options = {
-      //   type: "basic",
-      //   iconUrl: "./logo192.png",
-      //   title: "PostureML",
-      //   message: "Uh-Oh! Fix your posture!",
-      //   priority: 2
-      // }
-      // if (score < 70) {
-      //   chrome.notifications.create(options, function (notificationId) {
-      //     console.log("notificationId:", notificationId);
-      //   });
-      // }
+      console.log("score:", score);
+
+      if (score < 70) {
+        window.dispatchEvent(notifEvent);
+      }
+
+      let storedData = JSON.parse(localStorage.getItem("scores")) || {};
+      let date = new Date();
+      let timestamp = "".concat(date.getFullYear(), "/").concat(date.getMonth(), "/").concat(date.getDate(), "/").concat(date.getHours(), "/").concat(date.getMinutes(), "/").concat(date.getSeconds());
+      storedData[timestamp] = score;
+      localStorage.setItem("scores", JSON.stringify(storedData));
     } // End monitoring code for frames per second
 
 
@@ -39250,7 +39257,7 @@ function detectPoseInRealTime(video, net) {
 
     timeout = setTimeout(() => {
       poseDetectionFrame();
-    }, 1000);
+    }, 5000);
   }
 
   poseDetectionFrame();
@@ -39286,8 +39293,14 @@ async function bindPage() {
 }
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia; // kick off the demo
-
- //   document.getElementById("defaultButton").addEventListener("click", function () {
+// window.addEventListener("load", function () {
+//   localStorage.setItem("data", "test");
+//   this.document.getElementById("test").addEventListener("click", function () {
+//     let data = localStorage.getItem("data");
+//     console.log("Found:", data);
+//   });
+// });
+//   //   document.getElementById("defaultButton").addEventListener("click", function () {
 //   //     setDefaultPose();
 //   //   });
 
