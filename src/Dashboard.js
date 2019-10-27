@@ -1,6 +1,7 @@
 /*global chrome*/
 
 import React, { Component } from 'react';
+import LineGraph from './LineGraph';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -40,7 +41,10 @@ export default class Dashboard extends Component {
 
   render() {
     return(
-      <button onClick={this.handleNotification}>Test push notifications</button>
+      <>
+        <button onClick={this.handleNotification}>Test push notifications</button>
+        <LineGraph />
+      </>
     )
   }
 }
