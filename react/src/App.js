@@ -3,6 +3,8 @@ import { Grid, Card, Image, Button, Segment } from 'semantic-ui-react';
 import "./App.css";
 import LineGraph from "./LineGraph";
 
+let interval = null;
+
 export default class App extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +17,15 @@ export default class App extends Component {
             stopEvent: stopEvent,
             resetEvent: resetEvent
         }
+    }
+    componentDidMount() {
+        interval = setInterval(() => {
+            let data = localStorage.getItem("data")
+            // Write to firebase
+        }, 10000)
+    }
+    componentWillUnmount() {
+        clearInterval(interval);
     }
     toggleRecord() {
         let status = this.state.isRecording;
