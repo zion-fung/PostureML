@@ -39257,7 +39257,7 @@ function detectPoseInRealTime(video, net) {
 
     timeout = setTimeout(() => {
       poseDetectionFrame();
-    }, 1000);
+    }, 5000);
   }
 
   poseDetectionFrame();
