@@ -19,11 +19,11 @@ export default class LineGraph extends Component {
             type: "line",
             data: {
                 //Bring in data
-                labels: ["Jan", "Feb", "March"],
+                labels: this.props.labels,
                 datasets: [
                     {
-                        label: "Sales",
-                        data: [86, 67, 91],
+                        label: "Scores",
+                        data: this.props.data,
                         pointBackgroundColor: "rgb(10, 20, 180, 0.8)",
                         borderColor: "rgb(10, 20, 180, 0.8)",
                         fill: false
